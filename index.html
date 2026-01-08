@@ -1477,8 +1477,17 @@
 
         // NEW: Maximize Dupla View
         app.viewDuplaDetails = function (index) {
+            console.log("Viewing Dupla Details for index:", index);
             // Guard: check if data exists
-            if (!this.adminData || !this.adminData.duplasProgress[index]) return;
+            if (!this.adminData) {
+                console.error("Admin Data missing in viewDuplaDetails");
+                alert("Error: Admin Data sent to frontend is null. Try refreshing.");
+                return;
+            }
+            if (!this.adminData.duplasProgress[index]) {
+                console.error("Dupla index not found:", index);
+                return;
+            }
             const dupla = this.adminData.duplasProgress[index];
 
             // Populate Header
