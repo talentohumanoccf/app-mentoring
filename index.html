@@ -1194,7 +1194,7 @@
                                 <p class="text-xs text-slate-500 mt-1">Última sesión: ${d.lastSession ? new Date(d.lastSession).toLocaleDateString() : 'N/A'}</p>
                             </div>
 
-                            <!--Progress Bar-- >
+                            <!-- Progress Bar -->
                             <div class="space-y-1 pl-3">
                                 <div class="flex justify-between text-xs font-medium text-slate-500">
                                     <span>Progreso</span>
@@ -1204,8 +1204,8 @@
                                     <div class="h-full ${statusColor} transition-all duration-1000" style="width: ${progress}%"></div>
                                 </div>
                             </div>
-                        </div >
-            `;
+                        </div>
+                        `;
                     }).join('');
                 } else {
                     grid.innerHTML = '<p class="text-slate-500 col-span-3 text-center py-8">No hay datos de duplas disponibles.</p>';
@@ -1214,13 +1214,13 @@
                 // Table
                 const tbody = document.getElementById('admin-table-body');
                 tbody.innerHTML = data.recentSessions.map(s => `
-            < tr class="hover:bg-slate-50/50 transition-colors" >
+                    <tr class="hover:bg-slate-50/50 transition-colors">
                         <td class="px-6 py-4 text-slate-600">${new Date(s.date).toLocaleDateString()}</td>
                         <td class="px-6 py-4 font-medium text-slate-800">${s.mentor}</td>
                         <td class="px-6 py-4 text-slate-600">${s.mentee}</td>
                         <td class="px-6 py-4 text-slate-600">${s.title}</td>
                         <td class="px-6 py-4 text-slate-500">${s.duration || 1}h</td>
-                    </tr >
+                    </tr>
                 `).join('');
 
                 this.renderCharts(data.charts);
