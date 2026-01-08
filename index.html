@@ -682,8 +682,10 @@
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
             onclick="app.closeModal('create-dupla-modal')"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto">
-                <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+            <div
+                class="bg-white w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto max-h-[90vh] overflow-y-auto">
+                <div
+                    class="sticky top-0 bg-white z-10 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
                     <h3 class="text-lg font-bold text-slate-800">Crear Nueva Dupla</h3>
                     <button onclick="app.closeModal('create-dupla-modal')"
                         class="p-2 hover:bg-slate-100 rounded-full text-slate-500">
