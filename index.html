@@ -844,6 +844,14 @@
                 document.getElementById('user-role-display').textContent = this.currentUser.role || 'Usuario';
                 document.getElementById('welcome-name').textContent = this.currentUser.name ? this.currentUser.name.split(' ')[0] : 'Compañero';
 
+                // Set Avatar
+                if (this.currentUser.photo) {
+                    document.getElementById('sidebar-avatar').src = this.currentUser.photo;
+                } else {
+                    // Fallback using UI Avatars
+                    document.getElementById('sidebar-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.currentUser.name)}&background=random`;
+                }
+
                 // Fetch sessions from backend
                 this.fetchSessions();
             },
@@ -940,6 +948,12 @@
                                     ${s.file ? `<a href="${s.file}" target="_blank" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors text-xs font-bold border border-indigo-100">
                                         <i data-lucide="download" class="w-3 h-3"></i> Ver Evidencia
                                     </a>` : ''}
+                                    
+                                    <!-- Edit Button (Only Today) -->
+                                    ${new Date(s.date).toDateString() === new Date().toDateString() ?
+                                `<button onclick='app.editSession(${JSON.stringify(s).replace(/'/g, "&#39;")})' class="p-1.5 rounded-lg bg-slate-100 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors" title="Editar Sesión">
+                                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                                    </button>` : ''}
                                 </div>
                             </div>
                         </div>`;
@@ -969,6 +983,11 @@
             },
 
             openModal: function (modalId) {
+                if (modalId === 'session-modal' && !this.editingSessionId) {
+                    // Reset title if new session
+                    document.querySelector('#session-modal h3').textContent = "Registrar Sesión";
+                    document.getElementById('session-form').reset();
+                }
                 document.getElementById(modalId).classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             },
@@ -987,6 +1006,22 @@
                 }
             },
 
+            editSession: function (session) {
+                // Populate Form
+                const form = document.getElementById('session-form');
+                form.fecha.value = session.date ? new Date(session.date).toISOString().split('T')[0] : '';
+                form.tema.value = session.title;
+                form.hora_inicio.value = ""; // Force re-entry for calculation safety or logic complexity
+                form.hora_fin.value = "";
+                form.compromisos.value = session.compromisos || session.summary;
+
+                this.editingSessionId = session.sessionId;
+                this.openModal('session-modal');
+
+                // Update Modal Title (Optional UX)
+                document.querySelector('#session-modal h3').textContent = "Editar Sesión";
+            },
+
             submitSession: function () {
                 this.setLoading(true);
                 const form = document.getElementById('session-form');
@@ -994,7 +1029,7 @@
                 const fileInput = document.getElementById('evidence-file');
 
                 const sessionData = {
-                    action: 'SaveSession', // Keep casing consistent
+                    action: 'SaveSession',
                     pairId: this.currentUser.pairId,
                     mentorName: this.currentUser.role === 'Mentor' ? this.currentUser.name : this.currentUser.partnerName,
                     menteeName: this.currentUser.role === 'Mentee' ? this.currentUser.name : this.currentUser.partnerName,
@@ -1006,7 +1041,14 @@
                     tema: formData.get('tema'),
                     hora_inicio: formData.get('hora_inicio'),
                     hora_fin: formData.get('hora_fin'),
-                    compromisos: formData.get('compromisos')
+                    compromisos: formData.get('compromisos'),
+                    sessionId: this.editingSessionId || "" // Send ID if editing
+                };
+
+                // Helper to send fields
+                const proceed = () => {
+                    this.sendData(sessionData);
+                    this.editingSessionId = null; // Reset
                 };
 
                 // Handle file upload if present
@@ -1014,15 +1056,14 @@
                     const file = fileInput.files[0];
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        // FIX: Ensure we send clean content or handle it in backend
-                        sessionData.fileContent = e.target.result; // Send full data URL, backend handles split
+                        sessionData.fileContent = e.target.result;
                         sessionData.fileName = file.name;
-                        sessionData.mimeType = file.type; // Send MIME type
-                        this.sendData(sessionData);
+                        sessionData.mimeType = file.type;
+                        proceed();
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    this.sendData(sessionData);
+                    proceed();
                 }
             },
 
