@@ -602,6 +602,11 @@
                             class="text-indigo-600 hover:text-indigo-700 text-sm font-medium flex items-center gap-1 bg-indigo-50 px-3 py-2 rounded-lg transition-colors">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i> Actualizar
                         </button>
+                        <button onclick="app.sendBulkEmails()" id="btn-send-bulk"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+                            title="Enviar correos de bienvenida a duplas sin notificar">
+                            <i data-lucide="mail" class="w-4 h-4"></i> Enviar Correos Masivos
+                        </button>
                         <button onclick="app.openModal('create-dupla-modal')"
                             class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/30">
                             <i data-lucide="plus" class="w-4 h-4"></i> Nueva Dupla
@@ -1843,6 +1848,52 @@
                         this.showToast('Error de conexión', 'error');
                         console.error(err);
                     });
+            },
+
+            sendBulkEmails: function () {
+                if (!confirm('¿Deseas enviar los correos de bienvenida a todas las duplas que aún no han sido notificadas?')) return;
+
+                const btn = document.getElementById('btn-send-bulk');
+                if (!btn) return;
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="animate-spin w-4 h-4 mr-1 inline" data-lucide="loader-2"></i> Enviando...';
+                btn.disabled = true;
+                lucide.createIcons();
+
+                const payload = {
+                    action: 'SendBulkEmails'
+                };
+
+                fetch(this.apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        if (res.count > 0) {
+                            this.showToast(`¡Se enviaron correos de bienvenida a ${res.count} duplas! 🎉`, 'success');
+                            confetti({
+                                particleCount: 150,
+                                spread: 80,
+                                origin: { y: 0.6 }
+                            });
+                        } else {
+                            this.showToast('Todas las duplas ya tienen sus correos enviados. No hay pendientes. 👍', 'success');
+                        }
+                    } else {
+                        this.showToast('Error al enviar masivo: ' + res.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    console.error("Error bulk emailing:", err);
+                    this.showToast('Error de red al conectar con el servidor', 'error');
+                })
+                .finally(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                    lucide.createIcons();
+                });
             },
 
             seedData: function () {
