@@ -344,7 +344,7 @@
             </div>
 
             <!-- User Avatar (Bottom) -->
-            <div class="mt-auto relative group cursor-pointer">
+            <div class="mt-auto relative group cursor-pointer" onclick="app.openProfileModal()">
                 <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm overflow-hidden">
                     <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User"
                         class="w-full h-full object-cover" id="sidebar-avatar">
@@ -440,6 +440,74 @@
                     <span class="text-xs text-slate-400 group-hover:text-indigo-100 font-medium">Registrar avance</span>
                 </button>
 
+            </div>
+
+            <!-- Sección: Mi Dupla -->
+            <div id="mi-dupla-section" class="grid grid-cols-1 md:grid-cols-2 gap-6 slide-up delay-100">
+                <!-- Tarjeta: Mi Perfil -->
+                <div class="glass glass-card p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-indigo-500"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold text-indigo-500 uppercase tracking-wider bg-indigo-50 px-2.5 py-1 rounded-md">Mi Perfil</span>
+                            <button onclick="app.openProfileModal()" class="flex items-center gap-1 text-slate-500 hover:text-indigo-600 text-xs font-semibold transition-colors">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Editar
+                            </button>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                            <div class="w-20 h-20 rounded-full border-2 border-indigo-200 overflow-hidden bg-slate-100 flex-shrink-0 shadow-inner">
+                                <img id="user-profile-photo" src="https://ui-avatars.com/api/?name=Yo&background=random" class="w-full h-full object-cover" alt="Tu Foto">
+                            </div>
+                            <div class="text-center sm:text-left flex-1">
+                                <h4 id="user-profile-name" class="font-bold text-slate-800 text-lg leading-tight">Yo</h4>
+                                <p id="user-profile-role" class="text-xs text-indigo-500 font-bold mt-0.5">Mentor</p>
+                                <p id="user-profile-email" class="text-xs text-slate-400 mt-0.5 font-medium">correo@empresa.com</p>
+                                <p id="user-profile-bio" class="text-slate-600 text-sm leading-relaxed mt-3 italic line-clamp-3">Sin biografía registrada. Haz clic en Editar para agregar una breve presentación.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 border-t border-slate-100 pt-4 mt-4 text-xs">
+                        <i data-lucide="linkedin" class="w-4 h-4 text-[#0a66c2] flex-shrink-0"></i>
+                        <span class="font-semibold text-slate-500">LinkedIn:</span>
+                        <a id="user-profile-linkedin" href="#" target="_blank" class="text-indigo-600 hover:underline truncate max-w-[200px] font-medium hidden">Ver Perfil</a>
+                        <span id="user-profile-linkedin-placeholder" class="text-slate-400 italic">No vinculado</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta: Mi Dupla -->
+                <div class="glass glass-card p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-500"></div>
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span id="partner-header-badge" class="text-xs font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-md">Mi Dupla</span>
+                            <div class="flex items-center gap-3">
+                                <a id="partner-profile-email-btn" href="#" class="flex items-center gap-1 text-slate-500 hover:text-emerald-600 text-xs font-semibold transition-colors" title="Enviar correo">
+                                    <i data-lucide="mail" class="w-3.5 h-3.5"></i> Correo
+                                </a>
+                                <button onclick="app.copyPartnerEmailAndOpenChat()" class="flex items-center gap-1 text-slate-500 hover:text-indigo-600 text-xs font-semibold transition-colors" title="Iniciar chat en Google Chat">
+                                    <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Google Chat
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                            <div class="w-20 h-20 rounded-full border-2 border-emerald-200 overflow-hidden bg-slate-100 flex-shrink-0 shadow-inner">
+                                <img id="partner-profile-photo" src="https://ui-avatars.com/api/?name=Dupla&background=random" class="w-full h-full object-cover" alt="Foto de tu dupla">
+                            </div>
+                            <div class="text-center sm:text-left flex-1">
+                                <h4 id="partner-profile-name" class="font-bold text-slate-800 text-lg leading-tight">Cargando...</h4>
+                                <p id="partner-profile-role" class="text-xs text-emerald-600 font-bold mt-0.5">Mentee</p>
+                                <p id="partner-profile-email" class="text-xs text-slate-400 mt-0.5 font-medium">correo@empresa.com</p>
+                                <p id="partner-profile-bio" class="text-slate-600 text-sm leading-relaxed mt-3 italic line-clamp-3">Mi compañero de dupla aún no ha configurado su biografía.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 border-t border-slate-100 pt-4 mt-4 text-xs">
+                        <i data-lucide="linkedin" class="w-4 h-4 text-[#0a66c2] flex-shrink-0"></i>
+                        <span class="font-semibold text-slate-500">LinkedIn:</span>
+                        <a id="partner-profile-linkedin" href="#" target="_blank" class="text-indigo-600 hover:underline truncate max-w-[200px] font-medium hidden">Ver Perfil</a>
+                        <span id="partner-profile-linkedin-placeholder" class="text-slate-400 italic">No vinculado</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Sessions Timeline/Grid -->
@@ -588,11 +656,6 @@
                 </div>
 
                 <form id="session-form" onsubmit="event.preventDefault(); app.submitSession()" class="p-6 space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Fecha de la sesión</label>
-                        <input type="date" name="fecha" required
-                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
                     <!-- Guided Session Selector -->
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">¿En qué etapa de la Ruta
@@ -774,6 +837,67 @@
         </div>
     </div>
 
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+            onclick="app.closeModal('profile-modal')"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto max-h-[90vh] overflow-y-auto">
+                <div class="sticky top-0 bg-white z-10 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="user-cog" class="w-5 h-5 text-indigo-500"></i>
+                        Editar Mi Perfil
+                    </h3>
+                    <button onclick="app.closeModal('profile-modal')"
+                        class="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form id="profile-form" onsubmit="event.preventDefault(); app.submitProfile()" class="p-6 space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Foto de Perfil (URL)</label>
+                        <div class="flex gap-4 items-center">
+                            <div class="w-16 h-16 rounded-full border-2 border-indigo-100 overflow-hidden bg-slate-50 flex-shrink-0 shadow-inner">
+                                <img id="profile-preview-photo" src="https://ui-avatars.com/api/?name=Yo&background=random" class="w-full h-full object-cover" alt="Vista previa">
+                            </div>
+                            <div class="flex-1">
+                                <input type="url" name="photo" id="profile-input-photo" placeholder="https://ejemplo.com/foto.jpg"
+                                    oninput="document.getElementById('profile-preview-photo').src = this.value || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(app.currentUser.name) + '&background=random'"
+                                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">LinkedIn (URL)</label>
+                        <div class="relative">
+                            <input type="url" name="linkedin" id="profile-input-linkedin" placeholder="https://www.linkedin.com/in/usuario"
+                                class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm">
+                            <i data-lucide="linkedin" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Sobre mí / Biografía corta</label>
+                        <textarea name="bio" id="profile-input-bio" rows="4" maxlength="200" placeholder="Cuéntale un poco sobre ti a tu dupla (máx 200 caracteres)..."
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-all text-sm"></textarea>
+                    </div>
+
+                    <div class="pt-4 flex gap-3">
+                        <button type="button" onclick="app.closeModal('profile-modal')"
+                            class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all text-sm">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="profile-save-btn"
+                            class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all text-sm">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Script Logic (Preserved) -->
     <script>
         window.app = {
@@ -820,7 +944,7 @@
                 if (type === 'success') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 
                 setTimeout(() => {
-                    toast.style.animation = 'toastIn 0.4s reverse forwards';
+                    toast.style.animation = 'slideUp 0.4s reverse forwards';
                     setTimeout(() => toast.remove(), 400);
                 }, 4000);
             },
@@ -831,6 +955,16 @@
                 });
                 document.getElementById(viewId).classList.remove('hidden');
                 document.getElementById(viewId).classList.add('fade-in');
+
+                // Toggle Help Desk button visibility: only on user workspace-view
+                const helpBtn = document.getElementById('help-desk-btn');
+                if (helpBtn) {
+                    if (viewId === 'workspace-view' && this.currentUser && !this.currentUser.isAdmin) {
+                        helpBtn.classList.remove('hidden');
+                    } else {
+                        helpBtn.classList.add('hidden');
+                    }
+                }
             },
 
             checkSession: function () {
@@ -935,8 +1069,484 @@
                     document.getElementById('sidebar-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.currentUser.name)}&background=random`;
                 }
 
+                // Update Profile Cards (Mi Dupla)
+                this.updateProfileCards();
+
                 // Fetch sessions from backend
                 this.fetchSessions();
+            },
+
+            updateProfileCards: function () {
+                if (!this.currentUser) return;
+                
+                // --- USER (Tú) ---
+                document.getElementById('user-profile-name').textContent = this.currentUser.name || 'Tú';
+                document.getElementById('user-profile-role').textContent = this.currentUser.role || 'Rol';
+                document.getElementById('user-profile-email').textContent = this.currentUser.email || '';
+                
+                const userPhoto = this.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.currentUser.name || 'Usuario')}&background=random`;
+                document.getElementById('user-profile-photo').src = userPhoto;
+                
+                if (this.currentUser.bio) {
+                    document.getElementById('user-profile-bio').textContent = this.currentUser.bio;
+                    document.getElementById('user-profile-bio').classList.remove('text-slate-400', 'italic');
+                } else {
+                    document.getElementById('user-profile-bio').textContent = "Sin biografía registrada. Haz clic en Editar para agregar una breve presentación.";
+                    document.getElementById('user-profile-bio').classList.add('text-slate-400', 'italic');
+                }
+
+                const userLinkedin = this.currentUser.linkedin;
+                const userLinkedinEl = document.getElementById('user-profile-linkedin');
+                const userLinkedinPl = document.getElementById('user-profile-linkedin-placeholder');
+                if (userLinkedin) {
+                    userLinkedinEl.href = userLinkedin;
+                    userLinkedinEl.classList.remove('hidden');
+                    userLinkedinPl.classList.add('hidden');
+                } else {
+                    userLinkedinEl.classList.add('hidden');
+                    userLinkedinPl.classList.remove('hidden');
+                }
+
+                // --- PARTNER (Mi Dupla) ---
+                const partnerRole = this.currentUser.role === 'Mentor' ? 'Mentee' : 'Mentor';
+                document.getElementById('partner-profile-name').textContent = this.currentUser.partnerName || 'Cargando...';
+                document.getElementById('partner-profile-role').textContent = partnerRole;
+                document.getElementById('partner-profile-email').textContent = this.currentUser.partnerEmail || '';
+                document.getElementById('partner-header-badge').textContent = `Mi ${partnerRole}`;
+
+                // Set Badge styles
+                const partnerBadge = document.getElementById('partner-header-badge');
+                const partnerRoleText = document.getElementById('partner-profile-role');
+                if (partnerRole === 'Mentor') {
+                    partnerBadge.className = "text-xs font-bold text-indigo-600 uppercase tracking-wider bg-indigo-50 px-2.5 py-1 rounded-md";
+                    partnerRoleText.className = "text-xs text-indigo-500 font-bold mt-0.5";
+                } else {
+                    partnerBadge.className = "text-xs font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-md";
+                    partnerRoleText.className = "text-xs text-emerald-600 font-bold mt-0.5";
+                }
+
+                const partnerPhoto = this.currentUser.partnerPhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.currentUser.partnerName || 'Dupla')}&background=random`;
+                document.getElementById('partner-profile-photo').src = partnerPhoto;
+
+                if (this.currentUser.partnerBio) {
+                    document.getElementById('partner-profile-bio').textContent = this.currentUser.partnerBio;
+                    document.getElementById('partner-profile-bio').classList.remove('text-slate-400', 'italic');
+                } else {
+                    document.getElementById('partner-profile-bio').textContent = "Mi compañero de dupla aún no ha configurado su biografía.";
+                    document.getElementById('partner-profile-bio').classList.add('text-slate-400', 'italic');
+                }
+
+                const partnerLinkedin = this.currentUser.partnerLinkedin;
+                const partnerLinkedinEl = document.getElementById('partner-profile-linkedin');
+                const partnerLinkedinPl = document.getElementById('partner-profile-linkedin-placeholder');
+                if (partnerLinkedin) {
+                    partnerLinkedinEl.href = partnerLinkedin;
+                    partnerLinkedinEl.classList.remove('hidden');
+                    partnerLinkedinPl.classList.add('hidden');
+                } else {
+                    partnerLinkedinEl.classList.add('hidden');
+                    partnerLinkedinPl.classList.remove('hidden');
+                }
+
+                const partnerMailBtn = document.getElementById('partner-profile-email-btn');
+                if (this.currentUser.partnerEmail) {
+                    partnerMailBtn.href = `mailto:${this.currentUser.partnerEmail}?subject=Mentoring Comfamiliar - Conectando`;
+                    partnerMailBtn.classList.remove('hidden');
+                } else {
+                    partnerMailBtn.classList.add('hidden');
+                }
+                lucide.createIcons();
+            },
+
+            openProfileModal: function () {
+                if (!this.currentUser) return;
+                
+                // Populate inputs
+                document.getElementById('profile-input-photo').value = this.currentUser.photo || '';
+                document.getElementById('profile-input-linkedin').value = this.currentUser.linkedin || '';
+                document.getElementById('profile-input-bio').value = this.currentUser.bio || '';
+                
+                // Populate preview photo
+                const previewImg = document.getElementById('profile-preview-photo');
+                previewImg.src = this.currentUser.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(this.currentUser.name)}&background=random`;
+                
+                // Open
+                this.openModal('profile-modal');
+            },
+
+            submitProfile: function () {
+                if (!this.currentUser) return;
+
+                const form = document.getElementById('profile-form');
+                const formData = new FormData(form);
+                const btn = document.getElementById('profile-save-btn');
+                const originalText = btn.innerText;
+
+                btn.disabled = true;
+                btn.innerText = "Guardando...";
+
+                const profileData = {
+                    action: 'SaveProfile',
+                    email: this.currentUser.email,
+                    photo: formData.get('photo') || '',
+                    bio: formData.get('bio') || '',
+                    linkedin: formData.get('linkedin') || ''
+                };
+
+                fetch(this.apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(profileData)
+                })
+                .then(r => r.json())
+                .then(res => {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                    if (res.status === 'success') {
+                        // Update local currentUser
+                        this.currentUser.photo = profileData.photo;
+                        this.currentUser.bio = profileData.bio;
+                        this.currentUser.linkedin = profileData.linkedin;
+                        
+                        localStorage.setItem('mentoring_user', JSON.stringify(this.currentUser));
+                        
+                        // Re-render user view components
+                        this.loadUserData();
+                        
+                        this.showToast('¡Perfil actualizado con éxito! 🎉');
+                        this.closeModal('profile-modal');
+                    } else {
+                        this.showToast('Error: ' + res.message, 'error');
+                    }
+                })
+                .catch(e => {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                    this.showToast('Error de conexión con el servidor', 'error');
+                    console.error(e);
+                });
+            },
+
+            copyPartnerEmailAndOpenChat: function () {
+                if (!this.currentUser || !this.currentUser.partnerEmail) {
+                    this.showToast('No se encontró el correo de tu dupla', 'error');
+                    return;
+                }
+                
+                const email = this.currentUser.partnerEmail;
+                navigator.clipboard.writeText(email).then(() => {
+                    this.showToast('¡Correo de dupla copiado al portapapeles! 📋');
+                    setTimeout(() => {
+                        window.open('https://chat.google.com/', '_blank');
+                    }, 800);
+                }).catch(err => {
+                    console.error('Error al copiar al portapapeles: ', err);
+                    // Fallback in case clipboard API fails (e.g. non-secure connection)
+                    const textarea = document.createElement('textarea');
+                    textarea.value = email;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        this.showToast('¡Correo de dupla copiado! 📋');
+                        setTimeout(() => {
+                            window.open('https://chat.google.com/', '_blank');
+                        }, 800);
+                    } catch (e) {
+                        this.showToast('No se pudo copiar automáticamente. Correo: ' + email, 'error');
+                    }
+                    document.body.removeChild(textarea);
+                });
+            },
+
+            chatHistory: [],
+            activeHelpTab: 'ai',
+
+            openHelpModal: function () {
+                if (!this.currentUser) return;
+                
+                // Pre-fill information block
+                const nameEl = document.getElementById('help-user-name');
+                const emailEl = document.getElementById('help-user-email');
+                const roleEl = document.getElementById('help-user-role');
+                const pairEl = document.getElementById('help-user-pair');
+                if (nameEl) nameEl.textContent = this.currentUser.name || 'Yo';
+                if (emailEl) emailEl.textContent = this.currentUser.email || '';
+                if (roleEl) roleEl.textContent = this.currentUser.role || '';
+                if (pairEl) pairEl.textContent = this.currentUser.pairId || 'N/A';
+                
+                // Clear fields
+                const topicEl = document.getElementById('help-input-topic');
+                const msgEl = document.getElementById('help-input-message');
+                if (topicEl) topicEl.selectedIndex = 0;
+                if (msgEl) msgEl.value = '';
+                
+                // Open default tab
+                this.switchHelpTab('ai');
+                
+                // Initialize AI Chat
+                this.initHelpChat();
+                
+                this.openModal('help-modal');
+                
+                // Refresh Lucide icons in the newly opened/rendered elements
+                setTimeout(() => lucide.createIcons(), 50);
+            },
+
+            switchHelpTab: function (tabName) {
+                this.activeHelpTab = tabName;
+                const aiTab = document.getElementById('tab-help-ai');
+                const humanTab = document.getElementById('tab-help-human');
+                const aiContainer = document.getElementById('help-ai-container');
+                const humanContainer = document.getElementById('help-human-container');
+                
+                if (tabName === 'ai') {
+                    if (aiTab) {
+                        aiTab.classList.remove('border-transparent', 'text-slate-500');
+                        aiTab.classList.add('border-indigo-600', 'text-indigo-600');
+                    }
+                    if (humanTab) {
+                        humanTab.classList.remove('border-indigo-600', 'text-indigo-600');
+                        humanTab.classList.add('border-transparent', 'text-slate-500');
+                    }
+                    if (aiContainer) aiContainer.classList.remove('hidden');
+                    if (humanContainer) humanContainer.classList.add('hidden');
+                    
+                    this.scrollChatToBottom();
+                } else {
+                    if (humanTab) {
+                        humanTab.classList.remove('border-transparent', 'text-slate-500');
+                        humanTab.classList.add('border-indigo-600', 'text-indigo-600');
+                    }
+                    if (aiTab) {
+                        aiTab.classList.remove('border-indigo-600', 'text-indigo-600');
+                        aiTab.classList.add('border-transparent', 'text-slate-500');
+                    }
+                    if (humanContainer) humanContainer.classList.remove('hidden');
+                    if (aiContainer) aiContainer.classList.add('hidden');
+                }
+                lucide.createIcons();
+            },
+
+            initHelpChat: function () {
+                const historyEl = document.getElementById('chat-history');
+                if (!historyEl) return;
+                
+                // Only populate if empty
+                if (this.chatHistory.length === 0) {
+                    const welcomeText = "¡Hola! Soy **Comf-IA**, tu asistente virtual para el programa de Mentoring Comfamiliar Risaralda. Estoy aquí para resolver tus dudas metodológicas sobre las 6 fases de la ruta o el registro de evidencias. ¿En qué te puedo orientar hoy?";
+                    this.appendChatMessage('ai', welcomeText);
+                } else {
+                    // Re-render history
+                    historyEl.innerHTML = '';
+                    this.chatHistory.forEach(msg => {
+                        this.appendChatMessage(msg.role === 'user' ? 'user' : 'ai', msg.text);
+                    });
+                }
+            },
+
+            markdownToHtml: function (text) {
+                if (!text) return '';
+                // Escape HTML to prevent XSS
+                let html = text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+                
+                // Bold formatting
+                html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                // Italic formatting
+                html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                // Bullet points
+                html = html.replace(/^\s*[-*]\s+(.*)$/gm, '<li class="ml-4 list-disc">$1</li>');
+                // Line breaks
+                html = html.replace(/\n/g, '<br>');
+                return html;
+            },
+
+            appendChatMessage: function (sender, text) {
+                const historyEl = document.getElementById('chat-history');
+                if (!historyEl) return;
+                
+                const bubbleWrapper = document.createElement('div');
+                bubbleWrapper.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`;
+                
+                const bubble = document.createElement('div');
+                if (sender === 'user') {
+                    bubble.className = "max-w-[85%] bg-indigo-600 text-white px-4 py-2.5 rounded-2xl rounded-tr-none text-sm shadow-sm";
+                    bubble.textContent = text; // Plain text for user input
+                } else {
+                    bubble.className = "max-w-[85%] bg-slate-100 text-slate-800 px-4 py-2.5 rounded-2xl rounded-tl-none text-sm shadow-sm prose prose-sm";
+                    bubble.innerHTML = this.markdownToHtml(text); // Parsed markdown for AI response
+                }
+                
+                bubbleWrapper.appendChild(bubble);
+                historyEl.appendChild(bubbleWrapper);
+                
+                this.scrollChatToBottom();
+            },
+
+            sendAiMessage: function () {
+                const inputEl = document.getElementById('chat-input');
+                const sendBtn = document.getElementById('chat-send-btn');
+                if (!inputEl || !inputEl.value.trim()) return;
+                
+                const text = inputEl.value.trim();
+                inputEl.value = '';
+                
+                // Disable input and button
+                inputEl.disabled = true;
+                if (sendBtn) sendBtn.disabled = true;
+                
+                // Append message to UI
+                this.appendChatMessage('user', text);
+                
+                // Add to history state
+                this.chatHistory.push({ role: 'user', text: text });
+                
+                // Show typing indicator
+                const indicator = document.getElementById('chat-typing-indicator');
+                if (indicator) indicator.classList.remove('hidden');
+                this.scrollChatToBottom();
+                
+                const payload = {
+                    action: 'GetAiResponse',
+                    message: text,
+                    history: this.chatHistory.slice(0, -1) // Exclude the message we just added
+                };
+                
+                fetch(this.apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                })
+                .then(r => r.json())
+                .then(res => {
+                    // Hide typing indicator
+                    if (indicator) indicator.classList.add('hidden');
+                    
+                    // Re-enable input
+                    inputEl.disabled = false;
+                    if (sendBtn) sendBtn.disabled = false;
+                    inputEl.focus();
+                    
+                    if (res.status === 'success') {
+                        const aiResponse = res.response;
+                        this.appendChatMessage('ai', aiResponse);
+                        this.chatHistory.push({ role: 'model', text: aiResponse });
+                    } else {
+                        const errorMsg = "Lo siento, ha ocurrido un error al conectar con Comf-IA. Por favor, asegúrate de que haya conexión o reporta el incidente a un administrador en la otra pestaña.";
+                        this.appendChatMessage('ai', errorMsg);
+                    }
+                })
+                .catch(err => {
+                    console.error("Error talking to Gemini API:", err);
+                    if (indicator) indicator.classList.add('hidden');
+                    inputEl.disabled = false;
+                    if (sendBtn) sendBtn.disabled = false;
+                    inputEl.focus();
+                    
+                    const errorMsg = "Error de red al intentar conectar con Comf-IA. Por favor, revisa tu conexión a internet o utiliza la pestaña 'Reportar Incidente'.";
+                    this.appendChatMessage('ai', errorMsg);
+                });
+            },
+
+            scrollChatToBottom: function () {
+                const historyEl = document.getElementById('chat-history');
+                if (historyEl) {
+                    historyEl.scrollTop = historyEl.scrollHeight;
+                }
+            },
+
+            submitHelpRequest: function () {
+                if (!this.currentUser) return;
+
+                const form = document.getElementById('help-form');
+                const formData = new FormData(form);
+                const btn = document.getElementById('help-submit-btn');
+                const originalText = btn.innerHTML;
+
+                const topic = formData.get('topic');
+                const message = formData.get('message');
+
+                if (!topic || !message || message.trim().length < 10) {
+                    this.showToast('Por favor completa todos los campos (mínimo 10 caracteres)', 'error');
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin mr-1"></i> Enviando...`;
+                lucide.createIcons();
+
+                const helpData = {
+                    action: 'SendHelpRequest',
+                    email: this.currentUser.email,
+                    name: this.currentUser.name || 'Colaborador',
+                    role: this.currentUser.role || '',
+                    pairId: this.currentUser.pairId || 'N/A',
+                    topic: topic,
+                    message: message
+                };
+
+                fetch(this.apiUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(helpData)
+                })
+                .then(r => r.json())
+                .then(res => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    lucide.createIcons();
+                    
+                    if (res.status === 'success') {
+                        this.showToast('¡Solicitud de ayuda enviada! 🎉');
+                        
+                        // Victory Confetti
+                        confetti({
+                            particleCount: 100,
+                            spread: 50,
+                            origin: { y: 0.8 }
+                        });
+                        
+                        this.closeModal('help-modal');
+                        form.reset();
+                    } else {
+                        this.showToast('Error al enviar: ' + res.message, 'error');
+                    }
+                })
+                .catch(e => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    lucide.createIcons();
+                    this.showToast('Error de conexión con el servidor', 'error');
+                    console.error(e);
+                });
+            },
+
+            chatWithSupport: function () {
+                // Copy the primary admin email to clipboard
+                const adminEmail = "wpareja@comfamiliar.com";
+                navigator.clipboard.writeText(adminEmail).then(() => {
+                    this.showToast('¡Correo de soporte copiado al portapapeles! 📋');
+                    setTimeout(() => {
+                        window.open('https://chat.google.com/', '_blank');
+                    }, 800);
+                }).catch(err => {
+                    console.error('Error al copiar al portapapeles: ', err);
+                    // Fallback in case clipboard API fails (e.g. non-secure connection)
+                    const textarea = document.createElement('textarea');
+                    textarea.value = adminEmail;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        this.showToast('¡Correo de soporte copiado! 📋');
+                        setTimeout(() => {
+                            window.open('https://chat.google.com/', '_blank');
+                        }, 800);
+                    } catch (e) {
+                        this.showToast('Correo de soporte: ' + adminEmail, 'error');
+                    }
+                    document.body.removeChild(textarea);
+                });
             },
 
             fetchSessions: function () {
@@ -1517,7 +2127,7 @@
 
             // Filter Recent Sessions for this pair (Client-side filtered from dashboard data)
             const history = this.adminData.recentSessions.filter(s =>
-                s.mentor === dupla.mentor && s.mentee === dupla.mentee
+                String(s.pairId) === String(dupla.id)
             );
 
             const list = document.getElementById('detail-sessions-list');
@@ -1616,6 +2226,125 @@
                             <p class="text-slate-400 text-sm">Cargando historial...</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Help Desk Button -->
+    <button id="help-desk-btn" onclick="app.openHelpModal()" 
+        class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-tr from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 z-40 hidden hover:-translate-y-1 border-2 border-white/20"
+        title="Mesa de Ayuda - Soporte">
+        <i data-lucide="message-square-more" class="w-7 h-7"></i>
+    </button>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+            onclick="app.closeModal('help-modal')"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto max-h-[90vh] flex flex-col overflow-hidden">
+                
+                <!-- Sticky Header -->
+                <div class="sticky top-0 bg-white z-10 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="message-square-more" class="w-5 h-5 text-indigo-500"></i>
+                        Mesa de Ayuda - Mentoring
+                    </h3>
+                    <button onclick="app.closeModal('help-modal')"
+                        class="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <!-- Tab Switching Bar -->
+                <div class="flex border-b border-slate-100 bg-slate-50/50 sticky top-[61px] z-10">
+                    <button type="button" onclick="app.switchHelpTab('ai')" id="tab-help-ai"
+                        class="flex-1 py-3 px-4 text-center text-sm font-semibold border-b-2 border-indigo-600 text-indigo-600 transition-all flex items-center justify-center gap-2 hover:bg-slate-50">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        Preguntar a Comf-IA
+                    </button>
+                    <button type="button" onclick="app.switchHelpTab('human')" id="tab-help-human"
+                        class="flex-1 py-3 px-4 text-center text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition-all flex items-center justify-center gap-2 hover:bg-slate-50">
+                        <i data-lucide="user-cog" class="w-4 h-4"></i>
+                        Reportar Incidente
+                    </button>
+                </div>
+
+                <!-- Tab 1: AI Chat Container -->
+                <div id="help-ai-container" class="flex flex-col flex-1 overflow-hidden">
+                    <div id="chat-history" class="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/30 max-h-[350px] min-h-[350px]">
+                        <!-- Messages populated by JS -->
+                    </div>
+                    
+                    <!-- Typing Indicator -->
+                    <div id="chat-typing-indicator" class="px-6 py-2 bg-slate-50/30 flex gap-2 items-center text-slate-400 text-xs hidden">
+                        <div class="flex space-x-1 bg-slate-100 px-3 py-2 rounded-2xl rounded-bl-none">
+                            <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                            <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                            <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                        </div>
+                        <span>Comf-IA está escribiendo...</span>
+                    </div>
+
+                    <!-- Input Box -->
+                    <div class="p-4 border-t border-slate-100 bg-white flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Pregunta sobre la metodología, las 6 fases..." 
+                            class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none text-sm"
+                            onkeydown="if(event.key === 'Enter') app.sendAiMessage()">
+                        <button type="button" onclick="app.sendAiMessage()" id="chat-send-btn"
+                            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md transition-all flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Human Support Ticket Form Container -->
+                <div id="help-human-container" class="hidden overflow-y-auto max-h-[480px]">
+                    <form id="help-form" onsubmit="event.preventDefault(); app.submitHelpRequest()" class="p-6 space-y-5">
+                        
+                        <!-- Pre-filled info block -->
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 text-xs space-y-2 text-slate-600">
+                            <p class="font-bold text-slate-700 uppercase tracking-wider text-[10px]">Información del Solicitante</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><span class="font-semibold">Nombre:</span> <span id="help-user-name">...</span></div>
+                                <div><span class="font-semibold">Correo:</span> <span id="help-user-email">...</span></div>
+                                <div><span class="font-semibold">Rol en Dupla:</span> <span id="help-user-role">...</span></div>
+                                <div><span class="font-semibold">Código Dupla:</span> <span id="help-user-pair">...</span></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">¿Con qué requieres apoyo?</label>
+                            <select name="topic" id="help-input-topic" required
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800 text-sm">
+                                <option value="" disabled selected>Selecciona un tema...</option>
+                                <option value="Dudas metodológicas / Fases de la ruta">Dudas metodológicas / Fases de la ruta</option>
+                                <option value="Dificultad de contacto con mi dupla">Dificultad de contacto con mi dupla</option>
+                                <option value="Problemas técnicos con la plataforma">Problemas técnicos con la plataforma</option>
+                                <option value="Sugerencias o Comentarios">Sugerencias o Comentarios</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Mensaje / Detalle de tu solicitud</label>
+                            <textarea name="message" id="help-input-message" rows="5" required minlength="10"
+                                placeholder="Describe detalladamente cómo podemos ayudarte. Los administradores recibirán tu solicitud y te contactarán..."
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-all text-sm"></textarea>
+                        </div>
+
+                        <div class="pt-2 flex gap-3">
+                            <button type="button" onclick="app.closeModal('help-modal')"
+                                class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all text-sm">
+                                Cancelar
+                            </button>
+                            <button type="submit" id="help-submit-btn"
+                                class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all text-sm flex items-center justify-center gap-2">
+                                <span>Enviar Solicitud</span>
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
