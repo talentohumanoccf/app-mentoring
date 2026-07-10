@@ -2162,6 +2162,7 @@
                 return;
             }
             const dupla = this.adminData.duplasProgress[index];
+            this.currentSelectedDupla = dupla;
 
             // Populate Header
             document.getElementById('detail-mentor').textContent = dupla.mentor;
@@ -2208,6 +2209,118 @@
             }, 10);
         };
 
+        app.openReassignModal = function () {
+            if (!this.currentSelectedDupla) {
+                console.error("No selected dupla found");
+                return;
+            }
+            
+            // Populate ID in modal
+            document.getElementById('reassign-pair-id').textContent = this.currentSelectedDupla.id;
+            
+            // Reset fields
+            document.getElementById('reassign-role').value = 'Mentor';
+            document.getElementById('reassign-name').value = '';
+            document.getElementById('reassign-email').value = '';
+            document.getElementById('reassign-linkedin').value = '';
+            document.getElementById('reassign-photo').value = '';
+            document.getElementById('reassign-bio').value = '';
+            
+            // Close detail modal, open reassign modal
+            this.closeModal('dupla-detail-modal');
+            this.openModal('reassign-member-modal');
+            
+            // Trigger animation
+            setTimeout(() => {
+                const content = document.getElementById('reassign-member-content');
+                if (content) {
+                    content.classList.remove('opacity-0', 'scale-95');
+                    content.classList.add('opacity-100', 'scale-100');
+                }
+            }, 10);
+        };
+        
+        app.closeReassignModal = function () {
+            this.closeModal('reassign-member-modal');
+            
+            // Reset form
+            document.getElementById('reassign-member-form').reset();
+            
+            // Reopen detail modal
+            if (this.currentSelectedDupla) {
+                this.openModal('dupla-detail-modal');
+                setTimeout(() => {
+                    const content = document.getElementById('dupla-detail-content');
+                    if (content) {
+                        content.classList.remove('opacity-0', 'scale-95');
+                        content.classList.add('opacity-100', 'scale-100');
+                    }
+                }, 10);
+            }
+        };
+        
+        app.submitReassignment = function () {
+            if (!this.currentSelectedDupla) return;
+            
+            const pairId = this.currentSelectedDupla.id;
+            const role = document.getElementById('reassign-role').value;
+            const name = document.getElementById('reassign-name').value.trim();
+            const email = document.getElementById('reassign-email').value.trim().toLowerCase();
+            const linkedin = document.getElementById('reassign-linkedin').value.trim();
+            const photo = document.getElementById('reassign-photo').value.trim();
+            const bio = document.getElementById('reassign-bio').value.trim();
+            
+            if (!name || !email) {
+                this.showToast('Nombre y Correo son campos obligatorios', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('reassign-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="animate-spin mr-2">⏳</span> Procesando...`;
+            
+            const payload = {
+                action: 'ReassignMember',
+                pairId: pairId,
+                roleToReassign: role,
+                newName: name,
+                newEmail: email,
+                newLinkedin: linkedin,
+                newPhoto: photo,
+                newBio: bio
+            };
+            
+            fetch(this.apiUrl, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(res => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                
+                if (res.status === 'success') {
+                    this.showToast('Miembro reasignado y notificaciones enviadas con éxito.');
+                    
+                    // Close reassign modal completely (we don't reopen details since dupla changed)
+                    this.closeModal('reassign-member-modal');
+                    document.getElementById('reassign-member-form').reset();
+                    this.currentSelectedDupla = null;
+                    
+                    // Reload administrative dashboard data to show new member
+                    this.loadAdminData();
+                } else {
+                    this.showToast('Error: ' + res.message, 'error');
+                }
+            })
+            .catch(e => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+                this.showToast('Error de conexión con el servidor', 'error');
+            });
+        };
+
         // Start App
         document.addEventListener('DOMContentLoaded', () => window.app.init());
     </script>
@@ -2222,13 +2335,19 @@
                 <!-- Header -->
                 <div
                     class="p-6 border-b border-slate-100 flex justify-between items-start bg-slate-50/50 rounded-t-2xl">
-                    <div>
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <span id="detail-mentor">Mentor</span>
-                            <span class="text-indigo-400">&</span>
-                            <span id="detail-mentee">Mentee</span>
-                        </h3>
-                        <p class="text-slate-500 text-sm mt-1" id="detail-area">Area</p>
+                    <div class="flex flex-col md:flex-row md:items-center gap-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2 flex-wrap">
+                                <span id="detail-mentor">Mentor</span>
+                                <span class="text-indigo-400">&</span>
+                                <span id="detail-mentee">Mentee</span>
+                            </h3>
+                            <p class="text-slate-500 text-sm mt-1" id="detail-area">Area</p>
+                        </div>
+                        <button onclick="app.openReassignModal()"
+                            class="bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 border border-amber-500/30 hover:scale-[1.02] active:scale-[0.98] self-start md:self-center">
+                            <i data-lucide="user-cog" class="w-4 h-4"></i> Reasignar Miembro
+                        </button>
                     </div>
                     <button onclick="app.closeModal('dupla-detail-modal')"
                         class="p-2 hover:bg-slate-200 rounded-full text-slate-500 transition-colors">
@@ -2278,6 +2397,89 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reassign Member Modal -->
+    <div id="reassign-member-modal" class="fixed inset-0 z-[70] hidden">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity"
+            onclick="app.closeReassignModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl transform transition-transform duration-300 scale-95 opacity-0 pointer-events-auto flex flex-col max-h-[90vh]"
+                id="reassign-member-content">
+                <!-- Header -->
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">Reasignar Miembro</h3>
+                        <p class="text-slate-500 text-xs mt-1">Dupla: <span id="reassign-pair-id" class="font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">C-000</span></p>
+                    </div>
+                    <button onclick="app.closeReassignModal()"
+                        class="p-2 hover:bg-slate-200 rounded-full text-slate-500 transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <!-- Body Form -->
+                <form id="reassign-member-form" onsubmit="event.preventDefault(); app.submitReassignment()" class="p-6 overflow-y-auto space-y-4">
+                    <div class="space-y-4">
+                        <!-- Selector de Rol -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2" for="reassign-role">Miembro a Reasignar *</label>
+                            <select id="reassign-role" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm bg-white font-medium text-slate-700">
+                                <option value="Mentor">Mentor (El Guía)</option>
+                                <option value="Mentee">Mentee (El Aprendiz)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Nombre -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2" for="reassign-name">Nombre Completo *</label>
+                            <input type="text" id="reassign-name" required placeholder="Ej. Juan Pérez"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm">
+                        </div>
+                        
+                        <!-- Correo Electrónico -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2" for="reassign-email">Correo Electrónico *</label>
+                            <input type="email" id="reassign-email" required placeholder="Ej. juan.perez@comfamiliar.com"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm">
+                        </div>
+                        
+                        <!-- LinkedIn -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2" for="reassign-linkedin">LinkedIn (Opcional)</label>
+                            <input type="url" id="reassign-linkedin" placeholder="Ej. https://linkedin.com/in/usuario"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm">
+                        </div>
+                        
+                        <!-- URL de Foto -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2" for="reassign-photo">URL de Foto (Opcional)</label>
+                            <input type="url" id="reassign-photo" placeholder="Ej. https://drive.google.com/... o enlace de imagen"
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm">
+                        </div>
+                        
+                        <!-- Biografía -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2" for="reassign-bio">Biografía Corta (Opcional)</label>
+                            <textarea id="reassign-bio" rows="3" maxlength="200" placeholder="Breve descripción del miembro..."
+                                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-all text-sm"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer Buttons -->
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100 mt-6">
+                        <button type="button" onclick="app.closeReassignModal()"
+                            class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors text-sm font-semibold">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="reassign-submit-btn"
+                            class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white transition-all text-sm font-bold shadow-lg shadow-amber-500/20 flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4"></i> Reasignar y Notificar
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
