@@ -2171,6 +2171,16 @@
             // Use goal description if available, else generic
             document.getElementById('detail-objective').textContent = dupla.goalDescription || "Desarrollo de competencias y crecimiento profesional.";
 
+            // Populate Members Info for Direct Credentials Resend
+            const mentorNameEl = document.getElementById('detail-member-mentor-name');
+            const mentorEmailEl = document.getElementById('detail-member-mentor-email');
+            const menteeNameEl = document.getElementById('detail-member-mentee-name');
+            const menteeEmailEl = document.getElementById('detail-member-mentee-email');
+            if (mentorNameEl) mentorNameEl.textContent = dupla.mentor || 'N/A';
+            if (mentorEmailEl) mentorEmailEl.textContent = dupla.mentorEmail || 'Sin correo registrado';
+            if (menteeNameEl) menteeNameEl.textContent = dupla.mentee || 'N/A';
+            if (menteeEmailEl) menteeEmailEl.textContent = dupla.menteeEmail || 'Sin correo registrado';
+
             // Populate Progress
             document.getElementById('detail-progress-count').textContent = dupla.count;
             document.getElementById('detail-goal').textContent = dupla.goal;
@@ -2204,8 +2214,11 @@
             // Animation Trigger
             setTimeout(() => {
                 const content = document.getElementById('dupla-detail-content');
-                content.classList.remove('opacity-0', 'scale-95');
-                content.classList.add('opacity-100', 'scale-100');
+                if (content) {
+                    content.classList.remove('opacity-0', 'scale-95');
+                    content.classList.add('opacity-100', 'scale-100');
+                }
+                if (window.lucide) lucide.createIcons();
             }, 10);
         };
 
@@ -2321,6 +2334,59 @@
             });
         };
 
+        app.resendCredentials = function (role) {
+            if (!this.currentSelectedDupla) return;
+            
+            const pairId = this.currentSelectedDupla.id;
+            const targetName = role === 'Mentor' ? this.currentSelectedDupla.mentor : this.currentSelectedDupla.mentee;
+            const targetEmail = role === 'Mentor' ? this.currentSelectedDupla.mentorEmail : this.currentSelectedDupla.menteeEmail;
+            
+            if (!targetEmail) {
+                this.showToast(`No se encontró un correo registrado para el ${role}.`, 'error');
+                return;
+            }
+            
+            if (!confirm(`¿Deseas reenviar el correo formal de credenciales de acceso a ${targetName} (${role}) al correo: ${targetEmail}?`)) {
+                return;
+            }
+            
+            const btnId = role === 'Mentor' ? 'btn-resend-mentor' : 'btn-resend-mentee';
+            const btn = document.getElementById(btnId);
+            const originalHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<span class="animate-spin mr-1">⏳</span> Enviando...`;
+            }
+            
+            fetch(this.apiUrl, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'ResendMemberCredentials',
+                    pairId: pairId,
+                    role: role
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+                if (res.status === 'success') {
+                    this.showToast(res.message || 'Credenciales enviadas correctamente.');
+                } else {
+                    this.showToast('Error: ' + res.message, 'error');
+                }
+            })
+            .catch(err => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+                this.showToast('Error al conectar con el servidor', 'error');
+            });
+        };
+
         // Start App
         document.addEventListener('DOMContentLoaded', () => window.app.init());
     </script>
@@ -2381,6 +2447,51 @@
                                     <p class="text-sm font-bold text-slate-700">Objetivo del Mentoring</p>
                                     <p id="detail-objective" class="text-slate-600 text-sm italic">"..."</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Participantes de la Dupla & Reenvío Directo de Credenciales -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="users" class="w-4 h-4 text-indigo-500"></i>
+                            Participantes de la Dupla
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Card Mentor -->
+                            <div class="p-4 rounded-xl border border-indigo-100 bg-indigo-50/40 flex flex-col justify-between gap-3 shadow-sm hover:shadow-md transition-shadow">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-sm shrink-0">
+                                        M
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700 bg-indigo-100/80 px-2 py-0.5 rounded-md">Mentor</span>
+                                        <p id="detail-member-mentor-name" class="font-bold text-slate-800 text-sm truncate mt-1">Nombre Mentor</p>
+                                        <p id="detail-member-mentor-email" class="text-xs text-slate-500 truncate" title="Correo">correo@ejemplo.com</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="app.resendCredentials('Mentor')" id="btn-resend-mentor"
+                                    class="w-full bg-white hover:bg-indigo-600 text-indigo-600 hover:text-white border border-indigo-300 hover:border-indigo-600 px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95">
+                                    <i data-lucide="mail" class="w-3.5 h-3.5"></i> Reenviar Accesos al Mentor
+                                </button>
+                            </div>
+
+                            <!-- Card Mentee -->
+                            <div class="p-4 rounded-xl border border-emerald-100 bg-emerald-50/40 flex flex-col justify-between gap-3 shadow-sm hover:shadow-md transition-shadow">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm shadow-sm shrink-0">
+                                        A
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md">Mentee</span>
+                                        <p id="detail-member-mentee-name" class="font-bold text-slate-800 text-sm truncate mt-1">Nombre Mentee</p>
+                                        <p id="detail-member-mentee-email" class="text-xs text-slate-500 truncate" title="Correo">correo@ejemplo.com</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="app.resendCredentials('Mentee')" id="btn-resend-mentee"
+                                    class="w-full bg-white hover:bg-emerald-600 text-emerald-600 hover:text-white border border-emerald-300 hover:border-emerald-600 px-3 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm active:scale-95">
+                                    <i data-lucide="mail" class="w-3.5 h-3.5"></i> Reenviar Accesos al Mentee
+                                </button>
                             </div>
                         </div>
                     </div>
